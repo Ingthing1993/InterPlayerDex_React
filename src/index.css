@@ -1,0 +1,2 @@
+/* Global styles — applied once when index.js imports this file. */
+/* Use for resets, body font, and app-wide rules. Component-specific CSS can live in .css files next to components or in a shared styles folder. */
