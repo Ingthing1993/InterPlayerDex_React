@@ -1,4 +1,4 @@
-# Interplaydex Web
+# Interplaydex Web (InterPlayerDex React)
 
 A React front end — my first project. I use this repo as **study notes** (how React and the app flow work) and as a **showcase** of what I'm building.
 
