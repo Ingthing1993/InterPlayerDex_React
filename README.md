@@ -1,142 +1,104 @@
-# Interplaydex Web (InterPlayerDex React)
+# Interplaydex Web
 
-A React front end — my first project. I use this repo as **study notes** (how React and the app flow work) and as a **showcase** of what I'm building.
+A React front end for displaying player data, built as my first React project and shared publicly as a portfolio piece.
 
-**Public repository** — feel free to clone, fork, or use as reference. Don’t commit secrets or API keys; use environment variables (e.g. `.env`) and keep them in `.gitignore`.
+**[Live demo](#)** · **React 19** · **Create React App**
 
 ---
 
-## What this is
+## Overview
 
-A minimal React single-page app (Create React App) that fetches player data from an API and displays it. The codebase is commented so I can revisit the “why” and the flow. Components live under `src/Components/` (Header, Body, PlayerCard).
+Interplaydex Web is a single-page application that fetches player data from a REST API and renders it in a clean, component-based UI. The app demonstrates modern React patterns: functional components, hooks for state and side effects, and a clear separation between data-fetching and presentational components.
+
+---
+
+## What this project demonstrates
+
+- **React fundamentals** — Component composition, JSX, props, and the one-way data flow from root to leaves
+- **Hooks** — `useState` for the players list and `useEffect` for fetching on mount (with dependency array)
+- **API integration** — `fetch` to a backend API, handling async data and updating the UI when the response arrives
+- **Structure** — A thin root (`App`) that composes layout; a container component (`Body`) that owns state and fetch logic; presentational components (`Header`, `PlayerCard`) that receive data via props
+- **Dev workflow** — Create React App, dev proxy for the API, and a consistent folder structure under `src/Components/`
 
 ---
 
 ## Tech stack
 
-| Tool | Purpose |
-|------|--------|
+| Technology | Use |
+|------------|-----|
 | **React 19** | UI components and rendering |
-| **Create React App** | Build, dev server, proxy, and default tooling |
-| **React Testing Library** | Component tests (when I add them) |
+| **Create React App** | Build tooling, dev server, and proxy |
+| **React Testing Library** | For tests (when added) |
 
 ---
 
 ## Quick start
 
 ```bash
-# Install dependencies
+git clone https://github.com/Ingthing1993/InterPlayerDex_React.git
+cd InterPlayerDex_React
 npm install
-
-# Run the app (dev server at http://localhost:3000)
 npm start
-
-# Production build (output in build/)
-npm run build
-
-# Run tests
-npm test
 ```
 
-**Note:** The app expects an API at `http://localhost:3001/api/players`. Start your backend on that port, or adjust the fetch URL in `Body.js`.
+Open [http://localhost:3000](http://localhost:3000). The app expects a backend API at `http://localhost:3001/api/players` returning a JSON array of players (e.g. `{ _id, name, position, birthdate, image }`). Configure the proxy in `package.json` if your API runs on a different port.
+
+```bash
+npm run build   # Production build
+npm test        # Run tests
+```
 
 ---
 
-## App flow
+## How it works
 
-How data and rendering move through the app:
+1. **Entry** — The app mounts at `#root` in `index.html`; `index.js` creates a React root and renders `<App />`.
+2. **Layout** — `App` renders `<Header />` and `<Body />`. No data or fetch logic in the root.
+3. **Data** — `Body` uses `useState` for the players list and `useEffect` (with `[]`) to call `getPlayers()` once on mount. The API response is stored with `setPlayers(data)`.
+4. **Display** — `Body` maps over `players` and renders a `<PlayerCard />` for each, passing `image`, `name`, `position`, and `birthdate` as props. `PlayerCard` is purely presentational.
 
-1. **Entry** — `public/index.html` loads; the build injects the JS bundle. The bundle runs `src/index.js`.
-2. **Mount** — `index.js` finds the DOM node `#root`, creates a React root, and calls `root.render(<App />)`. From here, everything is React.
-3. **Root** — `App.js` is the root component. It renders the layout: `<Header />` and `<Body />`. No data fetching here; App stays thin.
-4. **Header** — Presentational only. Renders logo and title; no state or effects.
-5. **Body** — Holds the player list. On mount, `useEffect` runs and calls `getPlayers()`, which fetches from the API. The response is stored in state with `setPlayers(data)`. Body then maps over `players` and renders one `<PlayerCard />` per player, passing `image`, `name`, `position`, `birthdate` as props.
-6. **PlayerCard** — Presentational. Receives props and renders a card; no hooks, no fetch. Reused for each player.
-
-So: **index → App → Header + Body → Body (state + effect, fetch) → many PlayerCards (props)**.
-
----
-
-## Hooks used (and where)
-
-| Hook | Where it’s used | What it does |
-|------|------------------|--------------|
-| **`useState`** | `Body.js` | Holds the list of players (`players`) returned from the API. When `setPlayers(data)` runs after fetch, React re-renders Body and the new list is mapped to PlayerCards. |
-| **`useEffect`** | `Body.js` | Runs once after the first render (empty dependency array `[]`). Calls `getPlayers()` so we fetch when the component mounts, not on every render. |
-
-No custom hooks yet. Header and PlayerCard are presentational (props in, JSX out).
-
-### Best resources for hooks
-
-- **React docs (official)** — [React Reference: Hooks](https://react.dev/reference/react)  
-  - [useState](https://react.dev/reference/react/useState) — adding state to a component, when re-renders happen.  
-  - [useEffect](https://react.dev/reference/react/useEffect) — side effects (fetch, subscriptions), dependency array, cleanup.  
-  - [Rules of Hooks](https://react.dev/reference/rules/rules-of-hooks) — only call hooks at the top level and from React functions.
-- **Learn React (tutorial)** — [Managing state](https://react.dev/learn/managing-state), [Escape hatches (useEffect)](https://react.dev/learn/escape-hatches) — good for “why” and patterns.
-
----
-
-## Planning and building components
-
-How I approach adding or changing components:
-
-1. **Decide responsibility** — One main job per component (e.g. “show header”, “fetch and list players”, “show one player card”). If a file is doing two big things, split it.
-2. **Data flow** — Where does the data live? Usually one parent owns the state (or fetches), and passes data down via **props**. Children stay presentational when possible (e.g. PlayerCard only receives `name`, `position`, etc.).
-3. **State** — Use `useState` for values that change over time and that the UI must reflect. Put state in the lowest component that needs to read it and the children that need to change it (or lift it up if a sibling needs it).
-4. **Side effects** — Use `useEffect` for fetch, subscriptions, or touching the DOM. Run once on mount with `[]`; run when a value changes by listing it in the dependency array. Don’t fetch in the render; fetch inside `useEffect`.
-5. **Composition** — Prefer small components composed in a parent (e.g. Body maps `players` to `<PlayerCard ... />`) over one huge component. Reuse by props and composition, not by copying JSX.
-
-### Best resources for planning and building
-
-- **[Thinking in React](https://react.dev/learn/thinking-in-react)** (React docs) — Step-by-step: break UI into a component hierarchy, build a static version, identify state, add data flow. Use this when starting a new feature or page.
-- **[Passing props](https://react.dev/learn/passing-props-to-a-component)** — How to pass data and handlers into children.
-- **[Component composition](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children)** — Using `children` and composition instead of prop drilling when it makes sense.
+**Flow:** `index.js` → `App` → `Header` + `Body` → `Body` (state + `useEffect` fetch) → list of `PlayerCard` (props).
 
 ---
 
 ## Project structure
 
 ```
-interplaydex-web/
-├── public/
-│   └── index.html              # HTML shell; React mounts into <div id="root">
-├── src/
-│   ├── index.js                # Entry: createRoot(#root), render(<App />)
-│   ├── index.css               # Global styles
-│   ├── App.js                  # Root: <Header /> + <Body />
-│   ├── assets/
-│   │   └── images/             # Static assets (e.g. logo)
-│   └── Components/
-│       ├── Header/             # Logo and title (presentational)
-│       ├── Body/               # Fetches players, holds state, maps to PlayerCard
-│       └── PlayerCard/         # Single player card (presentational, props)
-├── package.json                # "proxy": "http://localhost:3001" for dev API
-└── README.md
+src/
+├── index.js                 # Entry: createRoot, render(<App />)
+├── index.css                # Global styles
+├── App.js                   # Root: <Header /> + <Body />
+├── assets/images/           # Static assets (e.g. logo)
+└── Components/
+    ├── Header/              # Logo and title (presentational)
+    ├── Body/                # Fetches players, holds state, maps to PlayerCard
+    └── PlayerCard/          # Single player card (props only)
 ```
 
 ---
 
-## Study notes (where to read in the code)
+## Implementation notes
 
-| Concept | Where it’s explained |
-|--------|-----------------------|
-| **Entry point & mounting** | `src/index.js` — how the app attaches to the DOM |
-| **Root component** | `src/App.js` — thin root, composes Header + Body |
-| **State and fetch** | `src/Components/Body/Body.js` — useState for players, useEffect to call getPlayers on mount |
-| **Presentational component** | `src/Components/PlayerCard/PlayerCard.js` — props in, JSX out |
-| **Mount point** | `public/index.html` — `#root` and script injection |
+| Area | Details |
+|------|---------|
+| **State** | `useState([])` in `Body.js` holds the players array; `setPlayers(data)` after fetch triggers a re-render and the list appears. |
+| **Side effects** | `useEffect(() => { getPlayers(); }, [])` in `Body.js` runs the fetch once on mount. Empty dependency array = run once. |
+| **Props** | `PlayerCard` receives `image`, `name`, `position`, `birthdate`; no internal state or fetch. |
+
+The codebase includes inline comments on entry point, mounting, and data flow for quick reference.
 
 ---
 
-## Goals / roadmap
+## Roadmap
 
-- [x] Barebones React app with a clear structure
-- [x] Heavily commented code for study and reuse
-- [x] Fetch players from API, display in Body via PlayerCard
-- [ ] *(Add features and goals here as the project grows)*
+- [x] React app with Header, Body, and PlayerCard components
+- [x] Fetch players from API and display with `useState` / `useEffect`
+- [x] Documented structure and flow
+- [ ] **Admin area** — Add an admin section with a React form to create/add new players (submit to API, then refresh or redirect to the player list)
+- [ ] Additional features as the project evolves
 
 ---
 
 ## License
 
-MIT (or your choice). This is a learning and showcase project.
+MIT. This is a public portfolio project — clone, fork, or use as reference. For local development, use environment variables for any secrets and keep them out of the repo (e.g. `.env` in `.gitignore`).
