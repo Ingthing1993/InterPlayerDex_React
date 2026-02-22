@@ -5,9 +5,8 @@
  * the rest of the app: layout, routes, and which "page" or section is shown.
  * Keep App thin: put real UI and logic in components/ (or pages/, etc.).
  */
-
-import Home from './components/Home';
-
+import Header from './Components/Header/Header';
+import PlayerCard from './Components/PlayerCard/PlayerCard';
 /**
  * Right now we only show the Home component. As the app grows you might:
  * - Add a header/footer here
@@ -15,7 +14,12 @@ import Home from './components/Home';
  * - Wrap children in providers (theme, auth, data)
  */
 function App() {
-  return <Home />;
+  return (
+    <>
+      <Header />
+      <PlayerCard />
+    </>
+  );
 }
 
 /** default export so other files can do: import App from './App' */
