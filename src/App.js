@@ -6,7 +6,7 @@
  * Keep App thin: put real UI and logic in components/ (or pages/, etc.).
  */
 import Header from './Components/Header/Header';
-import PlayerCard from './Components/PlayerCard/PlayerCard';
+import Body from './Components/Body/Body';
 /**
  * Right now we only show the Home component. As the app grows you might:
  * - Add a header/footer here
@@ -17,7 +17,7 @@ function App() {
   return (
     <>
       <Header />
-      <PlayerCard />
+      <Body />
     </>
   );
 }

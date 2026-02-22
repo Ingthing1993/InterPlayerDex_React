@@ -1,7 +1,24 @@
 /* Header component styles */
 
-header {
+.header-content {
   /* Add your header layout and styling here */
   justify-content: center;
   align-items: center;
+  width: 100%;
+  color: white;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+img {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+
 }
