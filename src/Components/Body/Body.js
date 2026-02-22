@@ -27,7 +27,16 @@ useEffect(() => {
 return (
   <div className="body-content">
   {players.map((player) => (
-    <PlayerCard key={player._id} image={player.image} name={player.name} position={player.position} birthdate={player.birthdate} />
+    <PlayerCard key={player._id} 
+    image={player.image} 
+    name={player.name} 
+    position={player.position} 
+    birthdate={player.birthdate} 
+    games={player.games_played  } 
+    goals={player.goals} 
+    assists={player.assists}
+    Joined={player.joining_date}
+    Left={player.leaving_date} />
   ))}
   </div>
 );

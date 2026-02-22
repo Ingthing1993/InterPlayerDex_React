@@ -11,7 +11,7 @@ import './PlayerCard.css';
  * then .map() over that state in the render. Use useEffect for the fetch and
  * useState to hold the list.
  */
-const PlayerCard = ({ image, name, position, birthdate }) => {
+const PlayerCard = ({ image, name, position, birthdate, games, goals, assists, Joined, Left }) => {
   console.log('playerData for PlayerCard', name, position, birthdate);
   return (
     <div className="player-card">
@@ -21,6 +21,8 @@ const PlayerCard = ({ image, name, position, birthdate }) => {
       <h2>{name}</h2>
       <p> {position}</p>
       <p>{birthdate}</p>
+      <p>{Joined} - {Left}</p>
+      <p>{games} games, {goals} goals, {assists} assists</p>
     </div>
   );
 };
