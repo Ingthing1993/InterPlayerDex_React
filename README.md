@@ -2,6 +2,8 @@
 
 A React front end — my first project. I use this repo as **study notes** (how React and the app flow work) and as a **showcase** of what I'm building.
 
+**Public repository** — feel free to clone, fork, or use as reference. Don’t commit secrets or API keys; use environment variables (e.g. `.env`) and keep them in `.gitignore`.
+
 ---
 
 ## What this is
