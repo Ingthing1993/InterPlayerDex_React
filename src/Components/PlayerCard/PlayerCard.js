@@ -12,7 +12,6 @@ import './PlayerCard.css';
  * useState to hold the list.
  */
 const PlayerCard = ({ image, name, position, birthdate, games, goals, assists, Joined, Left }) => {
-  console.log('playerData for PlayerCard', name, position, birthdate);
   return (
     <div className="player-card">
       <div className="player-card-image">

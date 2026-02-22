@@ -12,7 +12,6 @@ const getPlayers = async () => {
     const data = await response.json();
     // response.json() throws "unexpected character at line 1" when the server
     // returns HTML (e.g. 404) instead of JSON. Parse manually and catch.
-    console.log('getPlayers data', data);
     setPlayers(data);
   } catch (err) {
     setPlayers([]);
